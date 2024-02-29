@@ -14,7 +14,7 @@ assert train_dataset.columns[1] == "sentiment"
 
 counts = train_dataset["sentiment"].value_counts()
 
-assert counts["neural"] == 1117
+assert counts["neutral"] == 1117
 assert counts["positive"] == 458
 assert counts["negative"] == 236
 
