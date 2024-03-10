@@ -5,7 +5,7 @@ def ingest(path: str):
 
     df = pd.DataFrame(columns=['phrase', 'sentiment'])
 
-    for dirpath, dirname, filenames in os.walk(path):
+    for dirpath, _, filenames in os.walk(path):
 
         for file in filenames:
 
