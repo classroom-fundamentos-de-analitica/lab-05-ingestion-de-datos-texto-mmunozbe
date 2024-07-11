@@ -1,30 +1,28 @@
-import os.path
 import pandas as pd
+import os
 
+dir1 = "test"
+df1 = pd.DataFrame(columns=["phrase", "sentiment"])
+for root, dirs, files in os.walk(dir1):
+    for file in files:
+        if file.endswith(".txt"):
+            with open(os.path.join(root, file), "r") as f:
+                content = f.read()
+                df1 = df1._append(
+                    {"phrase": content, "sentiment": os.path.basename(root)},
+                    ignore_index=True,
+                )
+df1.to_csv("test_dataset.csv", index=False)
 
-def generar_csv(path):
-    """Genera un archivo csv con los datos de las frases y su
-    sentimiento en el path especificado"""
-
-    data = {"phrase": [], "sentiment": []}
-
-    # Recorrer los archivos de texto y guardar los datos
-    for root, _, files in os.walk(path):
-        for file in files:
-            if file.endswith(".txt"):
-                with open(os.path.join(root, file), "r") as f:
-                    phrase = f.read()
-                    data["phrase"].append(phrase)
-
-                    sentiment = os.path.basename(root)
-                    data["sentiment"].append(sentiment)
-
-    # Crear el dataframe y guardarlo en un archivo csv
-    df = pd.DataFrame(data)
-    name = path.replace("data/", "")
-    df.to_csv(f"{name}_dataset.csv", index=False)
-
-
-if __name__ == "__main__":
-    generar_csv("data/train")
-    generar_csv("data/test")
+dir2 = "train"
+df2 = pd.DataFrame(columns=["phrase", "sentiment"])
+for root, dirs, files in os.walk(dir2):
+    for file in files:
+        if file.endswith(".txt"):
+            with open(os.path.join(root, file), "r") as f:
+                content = f.read()
+                df2 = df2._append(
+                    {"phrase": content, "sentiment": os.path.basename(root)},
+                    ignore_index=True,
+                )
+df2.to_csv("train_dataset.csv", index=False)
