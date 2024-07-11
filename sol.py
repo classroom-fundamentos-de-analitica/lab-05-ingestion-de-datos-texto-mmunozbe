@@ -1,30 +1,30 @@
-import os
-import csv
+import os.path
 import pandas as pd
 
 
-def create_test_and_train_dataset():
-    path = ["/train/", "/test/"]
-    output_file = ["train_dataset.csv", "test_dataset.csv"]
-    folders = ["negative", "positive", "neutral"]
-    i = 0
-    for file in output_file:
-        with open(file, "w", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(["phrase", "sentiment"])
-        for folder in folders:
-            folder_path = "data" + path[i] + folder
-            with open(file, "a", newline="") as csvfile:
-                writer = csv.writer(csvfile)
+def generar_csv(path):
+    """Genera un archivo csv con los datos de las frases y su
+    sentimiento en el path especificado"""
 
-                for filename in os.listdir(folder_path):
-                    if filename.endswith(".txt"):
-                        file_path = os.path.join(folder_path, filename)
-                        with open(file_path, "r") as f:
-                            content = f.read()
-                            writer.writerow([content, folder])
-        i += 1
-    return
+    data = {"phrase": [], "sentiment": []}
+
+    # Recorrer los archivos de texto y guardar los datos
+    for root, _, files in os.walk(path):
+        for file in files:
+            if file.endswith(".txt"):
+                with open(os.path.join(root, file), "r") as f:
+                    phrase = f.read()
+                    data["phrase"].append(phrase)
+
+                    sentiment = os.path.basename(root)
+                    data["sentiment"].append(sentiment)
+
+    # Crear el dataframe y guardarlo en un archivo csv
+    df = pd.DataFrame(data)
+    name = path.replace("data/", "")
+    df.to_csv(f"{name}_dataset.csv", index=False)
 
 
-create_test_and_train_dataset()
+if __name__ == "__main__":
+    generar_csv("data/train")
+    generar_csv("data/test")
